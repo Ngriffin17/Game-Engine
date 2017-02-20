@@ -11,22 +11,30 @@ namespace FormExample
     {
         public static Form form;
         public static Thread thread;
+        public static Thread thread2;
         public static int s = 100;
         public static int fps = 30;
         public static double running_fps = 30.0;
         public static double s2 = 100;
-        Box sprite = new Box();
+        static Sprite sp = new Sprite();
 
         public Form1()
         {
             InitializeComponent();
             DoubleBuffered = true;
             form = this;
-            thread = new Thread(new ThreadStart(run));
+            for (int i = 0; i < 500; i++)
+            {
+                sp.add(new Box(1080, 1920));
+                Thread.Sleep(10);
+            }
+            thread = new Thread(new ThreadStart(render));
+            thread2 = new Thread(new ThreadStart(update));
             thread.Start();
+            thread2.Start();
         }
 
-        public static void run()
+        public static void render()
         {
             DateTime last = DateTime.Now;
             DateTime now = last;
@@ -34,17 +42,29 @@ namespace FormExample
             while (true)
             {
                 DateTime temp = DateTime.Now;
-                running_fps = .9 * running_fps + .1 * 1000.0 / (temp - now).TotalMilliseconds;
-                Console.WriteLine(running_fps);
                 now = temp;
                 TimeSpan diff = now - last;
                 if (diff.TotalMilliseconds< frameTime.TotalMilliseconds)
                     Thread.Sleep((frameTime-diff).Milliseconds);
                 last = DateTime.Now;
-                s++;
-                s2 += 1 / running_fps;
                 form.Invoke(new MethodInvoker(form.Refresh));
-                
+            }
+        }
+
+        public static void update()
+        {
+            DateTime last = DateTime.Now;
+            DateTime now = last;
+            TimeSpan frameTime = new TimeSpan(10000000 / fps);
+            while (true)
+            {
+                DateTime temp = DateTime.Now;
+                now = temp;
+                TimeSpan diff = now - last;
+                if (diff.TotalMilliseconds < frameTime.TotalMilliseconds)
+                    Thread.Sleep((frameTime - diff).Milliseconds);
+                last = DateTime.Now;
+                sp.update();
             }
         }
 
@@ -57,6 +77,7 @@ namespace FormExample
         {
             base.OnClosed(e);
             thread.Abort();
+            thread2.Abort();
         }
 
         protected override void OnResize(EventArgs e)
@@ -67,33 +88,33 @@ namespace FormExample
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
             if (e.KeyChar == '1')
-                sprite.add(new Sprite());
+                sp.add(new Box(ClientSize.Height,ClientSize.Width));
             if (e.KeyChar == '2')
                 for (int i = 0; i < 2; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '3')
                 for (int i = 0; i < 3; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '4')
                 for (int i = 0; i < 4; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '5')
                 for (int i = 0; i < 5; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '6')
                 for (int i = 0; i < 6; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '7')
                 for (int i = 0; i < 7; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '8')
                 for (int i = 0; i < 8; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '9')
                 for (int i = 0; i < 9; i++)
-                    sprite.add(new Sprite());
+                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
             if (e.KeyChar == '0')
-                sprite.clear();
+                sp.clear();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -108,11 +129,8 @@ namespace FormExample
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            String s22 = "FPS: " + running_fps;
-            e.Graphics.DrawString(s22, new Font("Comic Sans MS", 10), Brushes.Black, 0, 0);
-            sprite.render(e.Graphics);
-            int v = (int)(200 + 100 * Math.Sin(s2));
-            e.Graphics.DrawRectangle(Pens.Black, new Rectangle(0, 0, v, v));
+            e.Graphics.FillRectangle(Brushes.Black, new Rectangle(0, 0, 1920, 1080));
+            sp.render(e.Graphics);
         }
     }
 }

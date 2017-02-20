@@ -16,3 +16,12 @@ C:\Users\Nick\Documents\ASMSA\Game Programming\assignment01\FormExample\obj\Debu
 C:\Users\Nick\Documents\ASMSA\Game Programming\assignment01\FormExample\obj\Debug\FormExample.Form1.resources
 C:\Users\Nick\Documents\ASMSA\Game Programming\assignment01\FormExample\obj\Debug\FormExample.Properties.Resources.resources
 C:\Users\Nick\Documents\ASMSA\Game Programming\assignment01\FormExample\obj\Debug\FormExample.csproj.GenerateResource.Cache
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\bin\Debug\FormExample.exe.config
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.exe
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.pdb
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.csprojResolveAssemblyReference.cache
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.Form1.resources
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.Properties.Resources.resources
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\obj\Debug\FormExample.csproj.GenerateResource.Cache
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\bin\Debug\FormExample.exe
+C:\Users\Nick\Documents\ASMSA\Game Programming\assignment02\FormExample\bin\Debug\FormExample.pdb
