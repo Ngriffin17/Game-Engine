@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace FormExample
 {
-    public partial class Form1 : Form
+    public partial class Engine : Form
     {
         public static Form form;
         public static Thread thread;
@@ -17,17 +17,43 @@ namespace FormExample
         public static double running_fps = 30.0;
         public static double s2 = 100;
         static Sprite sp = new Sprite();
+        public static SlideSprite elephant;
+        public static Image img = Image.FromFile("Rhino.png");
 
-        public Form1()
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            //base.OnKeyDown(e);
+            //Console.WriteLine("asdffasdf");
+            if (e.KeyCode == Keys.Left)
+                elephant.tx -= 30;
+            if (e.KeyCode == Keys.Right)
+                elephant.tx += 30;
+            if (e.KeyCode == Keys.Up)
+                elephant.ty -= 30;
+            if (e.KeyCode == Keys.Down)
+                elephant.ty += 30;
+        }
+
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.Run(new Engine());
+        }
+
+        public Engine()
         {
             InitializeComponent();
             DoubleBuffered = true;
             form = this;
-            for (int i = 0; i < 500; i++)
-            {
-                sp.add(new Box(1080, 1920));
-                Thread.Sleep(10);
-            }
+            elephant = new SlideSprite(img);
+            elephant.tx = 100;
+            elephant.ty = 100;
+            elephant.v = 5;
+            sp.add(elephant);
             thread = new Thread(new ThreadStart(render));
             thread2 = new Thread(new ThreadStart(update));
             thread.Start();
@@ -64,7 +90,7 @@ namespace FormExample
                 if (diff.TotalMilliseconds < frameTime.TotalMilliseconds)
                     Thread.Sleep((frameTime - diff).Milliseconds);
                 last = DateTime.Now;
-                sp.update();
+                elephant.update();
             }
         }
 
@@ -87,34 +113,10 @@ namespace FormExample
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (e.KeyChar == '1')
-                sp.add(new Box(ClientSize.Height,ClientSize.Width));
-            if (e.KeyChar == '2')
-                for (int i = 0; i < 2; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '3')
-                for (int i = 0; i < 3; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '4')
-                for (int i = 0; i < 4; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '5')
-                for (int i = 0; i < 5; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '6')
-                for (int i = 0; i < 6; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '7')
-                for (int i = 0; i < 7; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '8')
-                for (int i = 0; i < 8; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '9')
-                for (int i = 0; i < 9; i++)
-                    sp.add(new Box(ClientSize.Height, ClientSize.Width));
-            if (e.KeyChar == '0')
-                sp.clear();
+            if (e.KeyChar == 'a') elephant.tx -= 30;
+            if (e.KeyChar == 'd') elephant.tx += 30;
+            if (e.KeyChar == 'w') elephant.ty -= 30;
+            if (e.KeyChar == 's') elephant.ty += 30;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

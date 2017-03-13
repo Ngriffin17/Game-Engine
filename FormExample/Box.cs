@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FormExample
 {
-    public class Box:Sprite
+    public class Box : Sprite
     {
         private int x, y, x2, y2, h, w, r;
 
