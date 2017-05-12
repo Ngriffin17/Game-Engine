@@ -1,18 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using System.Threading;
+using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FormExample
 {
     public class Sprite
     {
         private Sprite parent = null;
+
+        public Sprite Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
 
         //instance variable
         private float x = 0;
@@ -50,11 +58,33 @@ namespace FormExample
             set { rotation = value; }
         }
 
-        public List<Sprite> children = new List<Sprite>();
+        private float width;
 
-        public void Kill()
+        public float Width
         {
-            parent.children.Remove(this);
+            get { return width; }
+            set { width = value; }
+        }
+
+        private float height;
+
+        public float Height
+        {
+            get { return height; }
+            set { height = value; }
+        }
+
+
+        public List<Sprite> children = new List<Sprite>();
+        public List<Sprite> toAdd = new List<Sprite>();
+        public List<Sprite> toRemove = new List<Sprite>();
+        public List<CollisionSprite> cchildren = new List<CollisionSprite>();
+        public List<CollisionSprite> ctoAdd = new List<CollisionSprite>();
+        public List<CollisionSprite> ctoRemove = new List<CollisionSprite>();
+
+        public virtual void Kill()
+        {
+            parent.remove(this);
         }
 
         //methods
@@ -72,6 +102,15 @@ namespace FormExample
             g.Transform = original;
         }
 
+        public void update()
+        {
+            act();
+            foreach (Sprite s in children)
+            {
+                s.update();
+            }
+        }
+
         public virtual void paint(Graphics g)
         {
 
@@ -85,22 +124,88 @@ namespace FormExample
         public void add(Sprite s)
         {
             s.parent = this;
-            children.Add(s);
+            toAdd.Add(s);
         }
 
-        public void update()
+        public void cAdd(CollisionSprite s)
         {
-            act();
-            foreach(Sprite s in children)
+            ctoAdd.Add(s);
+        }
+
+        public void csAdd(CollisionSprite s)
+        {
+            add(s);
+            cAdd(s);
+        }
+
+        public void remove(Sprite s)
+        {
+            toRemove.Add(s);
+        }
+
+        public void cRemove(CollisionSprite s)
+        {
+            ctoRemove.Add(s);
+        }
+
+        public void csRemove(CollisionSprite s)
+        {
+            remove(s);
+            cRemove(s);
+        }
+
+        public void RemoveAll()
+        {
+            foreach (Sprite s in children)
             {
-                s.update();
+                remove(s);
+            }
+            foreach (CollisionSprite s in cchildren)
+            {
+                cRemove(s);
             }
         }
 
-        public void clear()
+        public void queueClear()
         {
-            children.Clear();
+            foreach (Sprite s in toRemove)
+            {
+                children.Remove(s);
+            }
+            toRemove = new List<Sprite>();
+            foreach (Sprite s in toAdd)
+            {
+                children.Add(s);
+            }
+            toAdd = new List<Sprite>();
+            foreach (CollisionSprite s in ctoRemove)
+            {
+                cchildren.Remove(s);
+                foreach (CollisionSprite c in cchildren)
+                {
+                    c.untrack(s);
+                    s.untrack(c);
+                }
+            }
+            ctoRemove = new List<CollisionSprite>();
+            foreach (CollisionSprite s in ctoAdd)
+            {
+                cchildren.Add(s);
+                foreach (CollisionSprite c in cchildren)
+                {
+                    c.track(s);
+                    s.track(c);
+                }
+            }
+            ctoAdd = new List<CollisionSprite>();
         }
 
+        public void updateAllTracking()
+        {
+            foreach (CollisionSprite c in cchildren)
+            {
+                c.updateTracking();
+            }
+        }
     }
 }

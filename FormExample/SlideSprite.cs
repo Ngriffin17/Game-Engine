@@ -9,36 +9,45 @@ namespace FormExample
 {
     public class SlideSprite : Sprite
     {
-        public int tx, ty, v, x, y;
-        private Image img;
+        public int tx, ty, w, h;
+        private int v = 5;
+        public Image img;
+        private Image image;
 
-        public SlideSprite(Image img)
+        public SlideSprite(Image img, int x2, int y2)
         {
             this.img = img;
-            x = 0;
-            y = 0;
+            X = x2;
+            Y = y2;
+            tx = x2;
+            ty = y2;
+        }
+
+        public SlideSprite(Image image)
+        {
+            this.image = image;
         }
 
         public override void paint(Graphics g)
         {
-            g.DrawImage(img, x, y);
+            g.DrawImage(img, 0, 0);
         }
-
+        
         public override void act()
         {
-            if(x + v < tx)
-                x += v;
-            else if(x - v > tx)
-                x -= v;
-            else if(Math.Abs(x - tx) <= v)
-                x = tx;
-            if (y + v < ty)
-                y += v;
-            else if (y - v > ty)
-                y -= v;
-            else if (Math.Abs(y - ty) <= v)
-                y = ty;
-            if (x == tx && y == ty)
+            if(X + v < tx)
+                X += v;
+            else if(X - v > tx)
+                X -= v;
+            else if(Math.Abs(X - tx) <= v)
+                X = tx;
+            if (Y + v < ty)
+                Y += v;
+            else if (Y - v > ty)
+                Y -= v;
+            else if (Math.Abs(Y - ty) <= v)
+                Y = ty;
+            if (X == tx && Y == ty)
                 v = 5;
             else
                 v += 5;
